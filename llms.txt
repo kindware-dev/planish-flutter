@@ -1,0 +1,44 @@
+# planish
+
+> In-app feedback for Flutter: users share bugs, ideas and questions from
+> the app, and each report carries an annotated screenshot, a log timeline,
+> device context and state snapshots. Sent by email or to your own API.
+> Nothing leaves the device without the user pressing Send. No third-party
+> service.
+
+Use it next to a crash reporter, not instead of one. Android and iOS.
+Minimum Flutter 3.32 / Dart 3.8; check `pubspec.yaml` for the installed
+version's constraints.
+
+## Docs
+
+- [README](https://github.com/kindware-dev/planish/blob/main/README.md): every
+  option, the privacy table, theming, localization, working with other
+  packages.
+- [Agent integration guide](https://github.com/kindware-dev/planish/blob/main/doc/agent-integration.md):
+  for AI coding agents integrating the package into an existing app. Working
+  rules, questions to ask the human, ordered steps, checks, things not to do.
+- [Changelog](https://github.com/kindware-dev/planish/blob/main/CHANGELOG.md):
+  breaking changes and renames between versions.
+- [Example app](https://github.com/kindware-dev/planish/tree/main/example/lib):
+  senders, log sinks, debug plugins, report context.
+
+## Key concepts
+
+- `Planish.init(PlanishConfig(...))` once, before `runApp`; `Planish.builder()`
+  on the app; `Planish.navigationObserver` on the navigator or router.
+- `Log.*` is the timeline: application logs, screen changes, HTTP calls made
+  through `LoggingHttpClient`, lifecycle changes, uncaught errors.
+- `reportContext` providers snapshot the app's state at report time;
+  `analysisNotes` is a fixed text for whoever reads the report.
+- Reports: `FeedbackReport` with `toJson()` and `toMarkdown()` (a brief);
+  `requests` lists the HTTP calls around the error with their request and
+  trace ids (`PrivacyConfig.traceHeaders` adds header names);
+  senders `EmailFeedbackSender`, `HttpFeedbackSender`, `CallbackFeedbackSender`.
+- `PrivacyConfig`: conservative defaults, redaction, `beforeSend`, a "What
+  will be sent?" page for the user.
+- Drafts: a report closed unsent is kept on the device with the context of
+  when the form opened (`keepDrafts`, `Planish.drafts`).
+- `prompts: PromptMode.off | quiet | notify`: after an uncaught error, a draft
+  is prepared and, in `notify`, a card offers it (`promptFeedbackOnError` is
+  deprecated).

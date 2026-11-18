@@ -1,0 +1,26 @@
+name: planish_example
+description: Example app for planish.
+version: 1.0.0+1
+publish_to: "none"
+
+environment:
+  sdk: ^3.8.0
+  flutter: ">=3.32.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  planish:
+    path: ../
+  http: ^1.5.0
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  shared_preferences: ^2.5.2
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

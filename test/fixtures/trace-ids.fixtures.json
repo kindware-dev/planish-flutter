@@ -1,0 +1,131 @@
+{
+    "about": "Shared cases for reading request and trace ids from a network call. The web widget tests read this file; the Flutter package tests (test/fixtures/trace-ids.fixtures.json) use an identical copy. Header names in `request`/`response` are as sent; expected `ids` omit absent keys.",
+    "cases": [
+        {
+            "name": "x-request-id on the response",
+            "url": "https://shop.test/api/orders",
+            "page": "https://shop.test/cart",
+            "request": {},
+            "response": { "X-Request-ID": "req_8f12a4" },
+            "ids": { "requestId": "req_8f12a4", "state": "found" }
+        },
+        {
+            "name": "names are case-insensitive and one id is kept",
+            "url": "https://shop.test/api",
+            "page": "https://shop.test/",
+            "request": { "x-request-id": "req_1" },
+            "response": { "X-Request-Id": "req_1" },
+            "ids": { "requestId": "req_1", "state": "found" }
+        },
+        {
+            "name": "request id precedence follows the table",
+            "url": "https://shop.test/api",
+            "page": "https://shop.test/",
+            "request": {},
+            "response": {
+                "correlation-id": "c_9",
+                "x-correlation-id": "xc_8",
+                "request-id": "r_7",
+                "x-request-id": "xr_6"
+            },
+            "ids": { "requestId": "xr_6", "state": "found" }
+        },
+        {
+            "name": "traceparent gives its trace-id, not its parent-id",
+            "url": "https://shop.test/api",
+            "page": "https://shop.test/",
+            "request": { "traceparent": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01" },
+            "response": {},
+            "ids": { "traceId": "4bf92f3577b34da6a3ce929d0e0e4736", "state": "found" }
+        },
+        {
+            "name": "sentry-trace gives its trace_id, not its span_id",
+            "url": "https://shop.test/api",
+            "page": "https://shop.test/",
+            "request": { "sentry-trace": "771a43a4192642f0b136d5159a501700-3c3f4d1a2e3b4c5d-1" },
+            "response": {},
+            "ids": { "traceId": "771a43a4192642f0b136d5159a501700", "state": "found" }
+        },
+        {
+            "name": "compact b3 gives its trace id",
+            "url": "https://shop.test/api",
+            "page": "https://shop.test/",
+            "request": {
+                "b3": "80f198ee56343ba864fe8b2a57d3eff7-e457b5a2e4d86bd1-1-05e3ac9a4f6e3b90"
+            },
+            "response": {},
+            "ids": { "traceId": "80f198ee56343ba864fe8b2a57d3eff7", "state": "found" }
+        },
+        {
+            "name": "x-datadog-trace-id is kept whole, unconverted",
+            "url": "https://shop.test/api",
+            "page": "https://shop.test/",
+            "request": { "x-datadog-trace-id": "1234567890123456789" },
+            "response": {},
+            "ids": { "traceId": "1234567890123456789", "state": "found" }
+        },
+        {
+            "name": "trace id precedence: traceparent wins over the others",
+            "url": "https://shop.test/api",
+            "page": "https://shop.test/",
+            "request": {
+                "x-datadog-trace-id": "123",
+                "x-b3-traceid": "b3b3",
+                "sentry-trace": "aaaa-bbbb-1",
+                "traceparent": "00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01"
+            },
+            "response": {},
+            "ids": { "traceId": "0af7651916cd43dd8448eb211c80319c", "state": "found" }
+        },
+        {
+            "name": "a malformed traceparent falls through to the next format",
+            "url": "https://shop.test/api",
+            "page": "https://shop.test/",
+            "request": { "traceparent": "garbage", "x-b3-traceid": "463ac35c9f6413ad" },
+            "response": {},
+            "ids": { "traceId": "463ac35c9f6413ad", "state": "found" }
+        },
+        {
+            "name": "custom header names add request ids after the built-in ones",
+            "url": "https://shop.test/api",
+            "page": "https://shop.test/",
+            "extra": ["X-My-Id"],
+            "request": {},
+            "response": { "x-my-id": "mine_1" },
+            "ids": { "requestId": "mine_1", "state": "found" }
+        },
+        {
+            "name": "a header masked as sensitive gives no id",
+            "url": "https://shop.test/api",
+            "page": "https://shop.test/",
+            "request": {},
+            "response": { "x-request-id": "<redacted>", "request-id": "r_2" },
+            "ids": { "requestId": "r_2", "state": "found" }
+        },
+        {
+            "name": "same origin without ids is absent",
+            "url": "https://shop.test/api",
+            "page": "https://shop.test/",
+            "request": {},
+            "response": { "content-type": "application/json" },
+            "ids": { "state": "absent" }
+        },
+        {
+            "name": "cross origin without ids is hidden on the web, absent in Flutter",
+            "url": "https://api.other.test/v1",
+            "page": "https://shop.test/",
+            "request": {},
+            "response": {},
+            "ids": { "state": "hidden" },
+            "flutterIds": { "state": "absent" }
+        },
+        {
+            "name": "cross origin with an exposed id is found",
+            "url": "https://api.other.test/v1",
+            "page": "https://shop.test/",
+            "request": {},
+            "response": { "x-request-id": "ext_1" },
+            "ids": { "requestId": "ext_1", "state": "found" }
+        }
+    ]
+}

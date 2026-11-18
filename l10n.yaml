@@ -1,0 +1,6 @@
+arb-dir: lib/l10n
+template-arb-file: app_en.arb
+output-localization-file: planish_localizations.dart
+output-class: PlanishLocalizations
+output-dir: lib/src/l10n/generated
+nullable-getter: false

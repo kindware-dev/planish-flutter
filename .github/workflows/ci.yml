@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        channel: [stable, beta]
+        include:
+          - channel: stable
+            version: 3.32.0
+            name: minimum
+    name: ${{ matrix.name || matrix.channel }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ matrix.channel }}
+          flutter-version: ${{ matrix.version }}
+          cache: true
+      - run: flutter pub get
+      - run: flutter gen-l10n
+      - run: dart format --output=none --set-exit-if-changed lib test example/lib
+      # Beta deprecates APIs before stable has the replacement; infos there
+      # are noise, not regressions.
+      - run: flutter analyze ${{ matrix.channel == 'stable' && '--fatal-infos' || '--no-fatal-infos' }}
+      - run: flutter test --coverage
+      - run: dart pub publish --dry-run
+        if: matrix.channel == 'stable' && matrix.version == ''

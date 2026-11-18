@@ -1,0 +1,11 @@
+AUDIT.md
+.github/
+.claude/
+.flutter-plugins
+.flutter-plugins-dependencies
+example/ios/
+example/android/
+build/
+.dart_tool/
+example/build/
+example/.dart_tool/
