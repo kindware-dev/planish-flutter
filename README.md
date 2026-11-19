@@ -19,6 +19,10 @@ captures their message, an annotated screenshot and the technical context
 around it: logs, screen changes, HTTP activity, device facts and app state.
 
 <p align="center">
+  <img src="https://raw.githubusercontent.com/kindware-dev/planish/main/doc/screenshots/demo.gif" width="280" alt="Reporting a bug: category, message, annotated screenshot, what will be sent, sent" />
+</p>
+
+<p align="center">
   <img src="https://raw.githubusercontent.com/kindware-dev/planish/main/doc/screenshots/form.png" width="19%" alt="The feedback form: category, message, screenshot, logs, review" />
   <img src="https://raw.githubusercontent.com/kindware-dev/planish/main/doc/screenshots/annotate.png" width="19%" alt="Annotating the screenshot" />
   <img src="https://raw.githubusercontent.com/kindware-dev/planish/main/doc/screenshots/review.png" width="19%" alt="What will be sent: every field the report contains" />

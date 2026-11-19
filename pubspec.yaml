@@ -15,6 +15,8 @@ platforms:
   ios:
 
 screenshots:
+  - description: "Reporting a bug: message, annotated screenshot, review, sent."
+    path: doc/screenshots/demo.gif
   - description: "The feedback form: category, message, screenshot, logs, review link."
     path: doc/screenshots/form.png
   - description: Annotating the screenshot before sending.
