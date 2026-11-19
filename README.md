@@ -23,11 +23,9 @@ around it: logs, screen changes, HTTP activity, device facts and app state.
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/kindware-dev/planish/main/doc/screenshots/form.png" width="19%" alt="The feedback form: category, message, screenshot, logs, review" />
-  <img src="https://raw.githubusercontent.com/kindware-dev/planish/main/doc/screenshots/annotate.png" width="19%" alt="Annotating the screenshot" />
-  <img src="https://raw.githubusercontent.com/kindware-dev/planish/main/doc/screenshots/review.png" width="19%" alt="What will be sent: every field the report contains" />
-  <img src="https://raw.githubusercontent.com/kindware-dev/planish/main/doc/screenshots/menu.png" width="19%" alt="The debug menu" />
-  <img src="https://raw.githubusercontent.com/kindware-dev/planish/main/doc/screenshots/console.png" width="19%" alt="The floating console over the running app" />
+  <img src="https://raw.githubusercontent.com/kindware-dev/planish/main/doc/screenshots/menu.png" width="26%" alt="The debug menu" />
+  <img src="https://raw.githubusercontent.com/kindware-dev/planish/main/doc/screenshots/network.png" width="26%" alt="The network log, with failed calls in red" />
+  <img src="https://raw.githubusercontent.com/kindware-dev/planish/main/doc/screenshots/console.png" width="26%" alt="The floating console over the running app" />
 </p>
 
 ## Why Planish

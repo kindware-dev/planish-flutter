@@ -17,14 +17,10 @@ platforms:
 screenshots:
   - description: "Reporting a bug: message, annotated screenshot, review, sent."
     path: doc/screenshots/demo.gif
-  - description: "The feedback form: category, message, screenshot, logs, review link."
-    path: doc/screenshots/form.png
-  - description: Annotating the screenshot before sending.
-    path: doc/screenshots/annotate.png
-  - description: "What will be sent: every field the report contains."
-    path: doc/screenshots/review.png
   - description: The debug menu, in debug and profile builds.
     path: doc/screenshots/menu.png
+  - description: The network log, with failed calls in red.
+    path: doc/screenshots/network.png
   - description: The floating console over the running app.
     path: doc/screenshots/console.png
 
