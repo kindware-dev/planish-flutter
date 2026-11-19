@@ -14,14 +14,9 @@
 [![CI](https://github.com/kindware-dev/planish/actions/workflows/ci.yml/badge.svg)](https://github.com/kindware-dev/planish/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Planish lets your users share bugs, ideas, questions and observations
-without leaving your app. Each report carries more than a screenshot and a
-line of text: an annotated screenshot, the recent logs, screen changes,
-HTTP activity, device facts and the state of the app, in one structured
-report. Send it by email, to your own API, or wherever your team works.
-
-**No mandatory backend. No third-party service.** Nothing leaves the device
-until the user presses **Send**, unless you turn on `autoSendErrors`.
+Users report bugs, ideas and questions from inside your app. Planish
+captures their message, an annotated screenshot and the technical context
+around it: logs, screen changes, HTTP activity, device facts and app state.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/kindware-dev/planish/main/doc/screenshots/form.png" width="19%" alt="The feedback form: category, message, screenshot, logs, review" />
@@ -33,33 +28,21 @@ until the user presses **Send**, unless you turn on `autoSendErrors`.
 
 ## Why Planish
 
-**Every piece of feedback arrives with its context.** You build an app for
-a client, or you hand a beta to testers. Someone finds a bug, or has an
-idea, or does not understand a screen. Instead of a screenshot forwarded
-through two people and a "which version?", they report from inside the app,
-and their words, the screenshot and the context travel together, tagged
-with the build they came from. One way to share feedback, one place to
-receive it.
+Your team gets a report it can act on instead of a screenshot and a vague
+description: the user's words and the context travel together, tagged with
+the build they came from, with a Markdown brief for an issue or a coding
+agent. Send it by email, to your own API, or to Planish Cloud.
 
-**Your team gets the evidence to act on it.** A screenshot alone rarely
-explains why something went wrong, or what the user was looking at when an
-idea came up. Each report carries the logs of the minutes before, the
-screens visited, the HTTP calls, the state of the app and any error, plus a
-Markdown brief that summarises them. Paste it into an issue, or into Claude
-Code, Codex or Cursor: Planish does not do the work, it gives whoever does
-it the information they need.
+**No mandatory backend.** No account needed for email or your own API.
+Nothing leaves the device until the user presses **Send**, unless you turn
+on `autoSendErrors`. Error handlers are chained, not replaced: Crashlytics,
+Sentry and your logger keep working.
 
-**A package, not a platform.** It lives in your app and sends reports to
-your e-mail, your API, or through your backend to Slack or Jira. No account,
-no dashboard, no SDK calling home. Error handlers are chained, not replaced:
-Crashlytics, Sentry and your logger stay in charge of what they do.
-
-**Planish Cloud, if you want an inbox.** Optional:
-[Planish Cloud](https://planish.kindware.eu) collects the reports of your
-Flutter apps and websites in one inbox, with triage and comments, and an MCP
-server so Claude Code, Cursor or Codex can read reports and mark them fixed.
-In the app, it is one sender: `PlanishCloudSender(key, server:
-'https://planish.kindware.eu')`.
+> **Planish Cloud: managed inbox and MCP.** Prefer a hosted inbox to
+> building your own backend? Planish Cloud collects feedback from your
+> Flutter apps and websites in one place, with triage, comments and an MCP
+> server for your coding agent: your app → the inbox → Claude Code, Cursor
+> or Codex. [Explore Planish Cloud →](https://planish.kindware.eu)
 
 ## Quick start
 
@@ -91,6 +74,17 @@ class MyApp extends StatelessWidget {
   }
 }
 ```
+
+**To Planish Cloud instead of e-mail**: create an app on
+[Planish Cloud](https://planish.kindware.eu) to get its ingest key, then:
+
+```dart
+sender: PlanishCloudSender('pl_…', server: 'https://planish.kindware.eu'),
+```
+
+**With a coding agent**: point Claude Code, Cursor or Codex at
+[`doc/agent-integration.md`](doc/agent-integration.md) and it integrates
+Planish for you, asking you the right questions first.
 
 That is the whole setup. Three things can open from code:
 
