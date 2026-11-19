@@ -1,6 +1,6 @@
 # Configuration
 
-Every option of `PlanishConfig`, section by section. The [README](https://github.com/kindware-dev/planish#readme) has the short version.
+Every option of `PlanishConfig`, section by section. The [README](https://github.com/kindware-dev/planish-flutter#readme) has the short version.
 
 ## The form
 

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/kindware-dev/planish/main/doc/logo.png" width="112" alt="Planish logo" />
+  <img src="https://raw.githubusercontent.com/kindware-dev/planish-flutter/main/doc/logo.png" width="112" alt="Planish logo" />
 </p>
 
 # Planish
@@ -11,7 +11,7 @@
 [![pub package](https://img.shields.io/pub/v/planish.svg)](https://pub.dev/packages/planish)
 [![pub points](https://img.shields.io/pub/points/planish)](https://pub.dev/packages/planish/score)
 [![likes](https://img.shields.io/pub/likes/planish)](https://pub.dev/packages/planish/score)
-[![CI](https://github.com/kindware-dev/planish/actions/workflows/ci.yml/badge.svg)](https://github.com/kindware-dev/planish/actions/workflows/ci.yml)
+[![CI](https://github.com/kindware-dev/planish-flutter/actions/workflows/ci.yml/badge.svg)](https://github.com/kindware-dev/planish-flutter/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Users report bugs, ideas and questions from inside your app. Planish
@@ -19,13 +19,13 @@ captures their message, an annotated screenshot and the technical context
 around it: logs, screen changes, HTTP activity, device facts and app state.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/kindware-dev/planish/main/doc/screenshots/demo.gif" width="280" alt="Reporting a bug: category, message, annotated screenshot, what will be sent, sent" />
+  <img src="https://raw.githubusercontent.com/kindware-dev/planish-flutter/main/doc/screenshots/demo.gif" width="280" alt="Reporting a bug: category, message, annotated screenshot, what will be sent, sent" />
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/kindware-dev/planish/main/doc/screenshots/menu.png" width="26%" alt="The debug menu" />
-  <img src="https://raw.githubusercontent.com/kindware-dev/planish/main/doc/screenshots/network.png" width="26%" alt="The network log, with failed calls in red" />
-  <img src="https://raw.githubusercontent.com/kindware-dev/planish/main/doc/screenshots/console.png" width="26%" alt="The floating console over the running app" />
+  <img src="https://raw.githubusercontent.com/kindware-dev/planish-flutter/main/doc/screenshots/menu.png" width="26%" alt="The debug menu" />
+  <img src="https://raw.githubusercontent.com/kindware-dev/planish-flutter/main/doc/screenshots/network.png" width="26%" alt="The network log, with failed calls in red" />
+  <img src="https://raw.githubusercontent.com/kindware-dev/planish-flutter/main/doc/screenshots/console.png" width="26%" alt="The floating console over the running app" />
 </p>
 
 ## Why Planish
@@ -171,7 +171,7 @@ Uncaught errors (with the widget that caused them) and lifecycle changes
 are logged by the package. Debug entries stay in the buffer in release
 builds, so the trail is there when a report is sent. Already on
 `package:logging`, `logger`, `talker` or Dio? They plug in; see
-[Logging and errors](https://github.com/kindware-dev/planish/blob/main/doc/logging-and-errors.md).
+[Logging and errors](https://github.com/kindware-dev/planish-flutter/blob/main/doc/logging-and-errors.md).
 
 **Who and where** come from your code, once:
 
@@ -211,7 +211,7 @@ mail body; `HttpFeedbackSender` posts everything as multipart with
 `brief.md`, `logs.txt` and `screenshot.png`; `PlanishCloudSender` does the
 same to a Planish Cloud inbox with just its ingest key; `CallbackFeedbackSender` or
 your own `FeedbackSender` for anything else. Every option is in
-[Configuration](https://github.com/kindware-dev/planish/blob/main/doc/configuration.md).
+[Configuration](https://github.com/kindware-dev/planish-flutter/blob/main/doc/configuration.md).
 
 ### Debug tools
 
@@ -221,7 +221,7 @@ of `LoggingHttpClient`, device facts, a shared preferences viewer, and your
 own `DebugActionPlugin` / `DebugPagePlugin` entries. Off in release by
 default; `Planish.debugTools.allow(true)` turns them on for the users you
 choose, testers or yourself, once your app knows who is signed in. Details in
-[Debug tools](https://github.com/kindware-dev/planish/blob/main/doc/debug-tools.md).
+[Debug tools](https://github.com/kindware-dev/planish-flutter/blob/main/doc/debug-tools.md).
 
 ## Privacy and collected data
 
@@ -270,7 +270,7 @@ declare it in your privacy policy and store data-safety forms.
 - **Your widget tests**: the default config stays out of the way under
   `flutter test`: no `debugPrint` swap, no sensor stream, no screenshot.
 
-The recipes are in [Working with other packages](https://github.com/kindware-dev/planish/blob/main/doc/integrations.md).
+The recipes are in [Working with other packages](https://github.com/kindware-dev/planish-flutter/blob/main/doc/integrations.md).
 
 What runs in a store build with the defaults:
 
@@ -284,7 +284,7 @@ What runs in a store build with the defaults:
 | `Log.minLevel` | `debug` | `info` |
 
 How to gate the tools, pass build defines and keep symbols:
-[Release builds and production](https://github.com/kindware-dev/planish/blob/main/doc/production.md).
+[Release builds and production](https://github.com/kindware-dev/planish-flutter/blob/main/doc/production.md).
 
 ## Using an AI coding agent
 
@@ -300,22 +300,22 @@ and the things not to do. [`llms.txt`](llms.txt) is the short index.
 
 ```text
 Integrate the planish package into this app by following
-https://raw.githubusercontent.com/kindware-dev/planish/main/doc/agent-integration.md
+https://raw.githubusercontent.com/kindware-dev/planish-flutter/main/doc/agent-integration.md
 ```
 
 ## Going further
 
-- [Configuration](https://github.com/kindware-dev/planish/blob/main/doc/configuration.md): every option, senders,
+- [Configuration](https://github.com/kindware-dev/planish-flutter/blob/main/doc/configuration.md): every option, senders,
   categories, the quick sheet, the tutorial, theming, localization.
-- [Logging and errors](https://github.com/kindware-dev/planish/blob/main/doc/logging-and-errors.md): `Log`, sinks,
+- [Logging and errors](https://github.com/kindware-dev/planish-flutter/blob/main/doc/logging-and-errors.md): `Log`, sinks,
   redaction, error handlers, the persisted log file.
-- [Debug tools](https://github.com/kindware-dev/planish/blob/main/doc/debug-tools.md): console, network, device,
+- [Debug tools](https://github.com/kindware-dev/planish-flutter/blob/main/doc/debug-tools.md): console, network, device,
   preferences, plugins.
-- [Working with other packages](https://github.com/kindware-dev/planish/blob/main/doc/integrations.md).
-- [Release builds and production](https://github.com/kindware-dev/planish/blob/main/doc/production.md).
-- [Example app](https://github.com/kindware-dev/planish/tree/main/example/lib):
+- [Working with other packages](https://github.com/kindware-dev/planish-flutter/blob/main/doc/integrations.md).
+- [Release builds and production](https://github.com/kindware-dev/planish-flutter/blob/main/doc/production.md).
+- [Example app](https://github.com/kindware-dev/planish-flutter/tree/main/example/lib):
   senders switched at runtime, a log sink, debug plugins, report context.
-- [Changelog](https://github.com/kindware-dev/planish/blob/main/CHANGELOG.md).
+- [Changelog](https://github.com/kindware-dev/planish-flutter/blob/main/CHANGELOG.md).
 
 ## Limitations
 
@@ -328,7 +328,7 @@ https://raw.githubusercontent.com/kindware-dev/planish/main/doc/agent-integratio
 ## Contributing
 
 Bug reports and feature requests go to the
-[issue tracker](https://github.com/kindware-dev/planish/issues).
+[issue tracker](https://github.com/kindware-dev/planish-flutter/issues).
 Pull requests are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md) for the
 setup and the checks the CI runs.
 

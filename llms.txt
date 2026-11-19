@@ -12,15 +12,15 @@ version's constraints.
 
 ## Docs
 
-- [README](https://github.com/kindware-dev/planish/blob/main/README.md): every
+- [README](https://github.com/kindware-dev/planish-flutter/blob/main/README.md): every
   option, the privacy table, theming, localization, working with other
   packages.
-- [Agent integration guide](https://github.com/kindware-dev/planish/blob/main/doc/agent-integration.md):
+- [Agent integration guide](https://github.com/kindware-dev/planish-flutter/blob/main/doc/agent-integration.md):
   for AI coding agents integrating the package into an existing app. Working
   rules, questions to ask the human, ordered steps, checks, things not to do.
-- [Changelog](https://github.com/kindware-dev/planish/blob/main/CHANGELOG.md):
+- [Changelog](https://github.com/kindware-dev/planish-flutter/blob/main/CHANGELOG.md):
   breaking changes and renames between versions.
-- [Example app](https://github.com/kindware-dev/planish/tree/main/example/lib):
+- [Example app](https://github.com/kindware-dev/planish-flutter/tree/main/example/lib):
   senders, log sinks, debug plugins, report context.
 
 ## Key concepts
