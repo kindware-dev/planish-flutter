@@ -1,3 +1,4 @@
+// ignore: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:planish/src/planish.dart';
 import 'package:planish/src/ui/planish_theme.dart';

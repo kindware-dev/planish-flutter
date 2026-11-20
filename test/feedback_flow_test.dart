@@ -1,5 +1,6 @@
 import 'dart:async';
 
+// ignore: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -281,6 +282,7 @@ void main() {
           MaterialApp(
             locale: const Locale('fr'),
             supportedLocales: const <Locale>[Locale('fr')],
+            // ignore: deprecated_member_use
             localizationsDelegates: GlobalMaterialLocalizations.delegates,
             builder: Planish.builder(),
             home: const Scaffold(body: Text('home')),

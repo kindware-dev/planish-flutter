@@ -5,6 +5,7 @@ import 'package:planish_example/plugins.dart';
 import 'package:planish_example/senders.dart';
 import 'package:planish_example/strings.dart';
 import 'package:flutter/foundation.dart';
+// ignore: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -80,6 +81,7 @@ class _ExampleAppState extends State<ExampleApp> {
         locale: _locale,
         supportedLocales: PlanishLocalizations.supportedLocales,
         localizationsDelegates: const [
+          // ignore: deprecated_member_use
           ...GlobalMaterialLocalizations.delegates,
           PlanishLocalizations.delegate,
         ],

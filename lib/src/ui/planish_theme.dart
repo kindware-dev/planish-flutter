@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+// ignore: deprecated_member_use
 import 'package:flutter/material.dart';
 
 /// Planish's colours: the same tokens as Planish Cloud and its web widget,
