@@ -180,7 +180,11 @@ class EdgeSwipeDetector extends StatefulWidget {
 }
 
 class _EdgeSwipeDetectorState extends State<EdgeSwipeDetector> {
+  static const double _flickVelocity = 800;
+  static const double _flickDistance = 24;
+
   Offset? _start;
+  double _travel = 0;
 
   bool _onEdge(Offset p) {
     final size = MediaQuery.sizeOf(context);
@@ -199,27 +203,47 @@ class _EdgeSwipeDetectorState extends State<EdgeSwipeDetector> {
     };
   }
 
-  void _panStart(DragStartDetails d) =>
-      _start = _onEdge(d.globalPosition) ? d.globalPosition : null;
+  // With DragStartBehavior.down this is where the finger touched, not where
+  // the pan was accepted (36 px later), so a swipe from the very edge counts.
+  void _panStart(DragStartDetails d) {
+    _start = _onEdge(d.globalPosition) ? d.globalPosition : null;
+    _travel = 0;
+  }
+
+  /// Movement towards the inside of the screen.
+  double _inward(Offset o) {
+    final rtl = Directionality.of(context) == TextDirection.rtl;
+    return switch (widget.config.edge) {
+      ScreenEdge.start => rtl ? -o.dx : o.dx,
+      ScreenEdge.end => rtl ? o.dx : -o.dx,
+      ScreenEdge.top => o.dy,
+      ScreenEdge.bottom => -o.dy,
+    };
+  }
+
+  void _fire() {
+    _start = null;
+    widget.onSwipe();
+  }
 
   void _panUpdate(DragUpdateDetails d) {
     final start = _start;
     if (start == null) {
       return;
     }
-    final delta = d.globalPosition - start;
-    final rtl = Directionality.of(context) == TextDirection.rtl;
-    final min = widget.config.minDistance;
-    final done = switch (widget.config.edge) {
-      ScreenEdge.start => rtl ? delta.dx <= -min : delta.dx >= min,
-      ScreenEdge.end => rtl ? delta.dx >= min : delta.dx <= -min,
-      ScreenEdge.top => delta.dy >= min,
-      ScreenEdge.bottom => delta.dy <= -min,
-    };
-    if (done) {
-      _start = null;
-      widget.onSwipe();
+    _travel = _inward(d.globalPosition - start);
+    if (_travel >= widget.config.minDistance) {
+      _fire();
     }
+  }
+
+  void _panEnd(DragEndDetails d) {
+    if (_start != null &&
+        _travel >= _flickDistance &&
+        _inward(d.velocity.pixelsPerSecond) >= _flickVelocity) {
+      _fire();
+    }
+    _start = null;
   }
 
   @override
@@ -231,11 +255,10 @@ class _EdgeSwipeDetectorState extends State<EdgeSwipeDetector> {
             PanGestureRecognizer.new,
             (PanGestureRecognizer r) {
               r
+                ..dragStartBehavior = DragStartBehavior.down
                 ..onStart = _panStart
                 ..onUpdate = _panUpdate
-                ..onEnd = (DragEndDetails _) {
-                  _start = null;
-                }
+                ..onEnd = _panEnd
                 ..onCancel = () {
                   _start = null;
                 };

@@ -76,6 +76,38 @@ void main() {
     expect(fired, 1);
   });
 
+  testWidgets('a swipe from the very edge, in small steps, fires', (
+    WidgetTester tester,
+  ) async {
+    var fired = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: EdgeSwipeDetector(
+          config: const EdgeSwipeGestureConfig(),
+          onSwipe: () => fired++,
+          child: const ColoredBox(color: Colors.white),
+        ),
+      ),
+    );
+    final width = tester.view.physicalSize.width / tester.view.devicePixelRatio;
+
+    final g = await tester.startGesture(Offset(width - 3, 300));
+    for (var i = 0; i < 25; i++) {
+      await g.moveBy(const Offset(-4, 0));
+    }
+    await g.up();
+    await tester.pump();
+    expect(fired, 1, reason: '100 px from the edge, past the 36 px pan slop');
+
+    await tester.flingFrom(Offset(width - 3, 300), const Offset(-60, 0), 1000);
+    await tester.pump();
+    expect(fired, 2, reason: 'a short quick flick');
+
+    await tester.flingFrom(Offset(width / 2, 300), const Offset(-60, 0), 1000);
+    await tester.pump();
+    expect(fired, 2, reason: 'not from the edge');
+  });
+
   testWidgets('a sideways flick counts; a gentle movement does not', (
     WidgetTester tester,
   ) async {

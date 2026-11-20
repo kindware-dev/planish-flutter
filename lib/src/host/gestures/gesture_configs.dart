@@ -63,8 +63,8 @@ enum ScreenEdge {
 class EdgeSwipeGestureConfig {
   const EdgeSwipeGestureConfig({
     this.edge = ScreenEdge.end,
-    this.edgeWidth = 24.0,
-    this.minDistance = 120.0,
+    this.edgeWidth = 40.0,
+    this.minDistance = 80.0,
   });
 
   /// Edge the swipe must start from.
@@ -73,6 +73,7 @@ class EdgeSwipeGestureConfig {
   /// Width of the start zone, in logical pixels.
   final double edgeWidth;
 
-  /// Distance to travel before the gesture fires.
+  /// Distance to travel before the gesture fires. A quick flick inward fires
+  /// earlier.
   final double minDistance;
 }
