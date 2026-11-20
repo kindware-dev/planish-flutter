@@ -508,11 +508,14 @@ abstract final class Planish {
   static void _promptAfterError(Object error, StackTrace? stackTrace) {
     // Wait for the frame after the error so the screenshot shows the broken
     // screen rather than a half-built one.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future<void>.delayed(const Duration(milliseconds: 300), () {
-        unawaited(_prepare(error, stackTrace));
-      });
-    });
+    WidgetsBinding.instance
+      ..addPostFrameCallback((_) {
+        Future<void>.delayed(const Duration(milliseconds: 300), () {
+          unawaited(_prepare(error, stackTrace));
+        });
+      })
+      // An error on an idle screen schedules no frame of its own.
+      ..scheduleFrame();
   }
 
   /// An automatic draft for the error, then, in `notify`, the card.

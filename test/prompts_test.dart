@@ -107,6 +107,24 @@ void main() {
     expect(find.text('Discard draft'), findsOneWidget);
   });
 
+  testWidgets('an error on an idle screen asks for a frame', (
+    WidgetTester tester,
+  ) async {
+    await init(tester, PromptMode.notify);
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    expect(tester.binding.hasScheduledFrame, isFalse);
+
+    PlatformDispatcher.instance.onError!(
+      StateError('idle'),
+      StackTrace.current,
+    );
+    expect(tester.binding.hasScheduledFrame, isTrue);
+    await settle(tester);
+    expect(find.text('Something went wrong'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 10));
+  });
+
   testWidgets('notify: two dismissals ask once, and quiet stops the cards', (
     WidgetTester tester,
   ) async {
