@@ -229,12 +229,16 @@ class QuickReportAction {
   const QuickReportAction({
     required this.icon,
     required this.label,
+    this.hint,
     this.category,
     this.onTap,
   });
 
   final IconData icon;
   final String label;
+
+  /// A short line under the label.
+  final String? hint;
 
   /// Preselected in the form. Ignored when [onTap] is set.
   final FeedbackCategory? category;

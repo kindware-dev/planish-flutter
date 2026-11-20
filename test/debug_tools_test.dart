@@ -391,6 +391,9 @@ void quickReportTests() {
 
     expect(find.text('Share feedback'), findsOneWidget);
     expect(find.byType(TextField), findsNothing, reason: 'form not open yet');
+    expect(find.text("Something doesn't work as expected"), findsOneWidget);
+    expect(find.text('Something could work even better'), findsOneWidget);
+    expect(find.text("Something isn't clear"), findsOneWidget);
 
     await tester.drag(find.text('Share feedback'), const Offset(0, 200));
     await tester.pumpAndSettle();

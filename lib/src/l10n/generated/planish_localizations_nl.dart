@@ -256,7 +256,7 @@ class PlanishLocalizationsNl extends PlanishLocalizations {
 
   @override
   String get quickSubtitle =>
-      'Een probleem, een idee, een vraag: vertel het ons. Een schermafbeelding en de recente logs worden bijgevoegd.';
+      'Een schermafbeelding en de recente logs worden bijgevoegd.';
 
   @override
   String get quickReportProblem => 'Probleem melden';
@@ -266,6 +266,15 @@ class PlanishLocalizationsNl extends PlanishLocalizations {
 
   @override
   String get quickAskQuestion => 'Vraag stellen';
+
+  @override
+  String get quickProblemHint => 'Iets werkt niet zoals verwacht';
+
+  @override
+  String get quickIdeaHint => 'Iets kan nog beter werken';
+
+  @override
+  String get quickQuestionHint => 'Iets is niet duidelijk';
 
   @override
   String get drafts => 'Concepten';

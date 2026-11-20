@@ -258,7 +258,7 @@ class PlanishLocalizationsDe extends PlanishLocalizations {
 
   @override
   String get quickSubtitle =>
-      'Ein Problem, eine Idee, eine Frage: Erzählen Sie uns davon. Ein Screenshot dieses Bildschirms und die letzten Logs werden angehängt.';
+      'Ein Screenshot dieses Bildschirms und die letzten Logs werden angehängt.';
 
   @override
   String get quickReportProblem => 'Problem melden';
@@ -268,6 +268,15 @@ class PlanishLocalizationsDe extends PlanishLocalizations {
 
   @override
   String get quickAskQuestion => 'Frage stellen';
+
+  @override
+  String get quickProblemHint => 'Etwas funktioniert nicht wie erwartet';
+
+  @override
+  String get quickIdeaHint => 'Etwas könnte noch besser funktionieren';
+
+  @override
+  String get quickQuestionHint => 'Etwas ist unklar';
 
   @override
   String get drafts => 'Entwürfe';

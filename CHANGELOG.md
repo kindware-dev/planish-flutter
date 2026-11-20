@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- The "Share feedback" sheet lists its choices as rows, each with a short
+  hint; `QuickReportAction.hint` adds one to your own entries
+- The feedback form's title is bold
+
 ## 0.1.1
 
 - Works with `device_info_plus` 13; 12 is still accepted

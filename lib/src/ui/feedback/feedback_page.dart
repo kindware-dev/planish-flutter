@@ -355,7 +355,10 @@ class _FeedbackPageState extends State<FeedbackPage> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(isError ? s.reportProblemTitle : s.sendFeedbackTitle),
+          title: Text(
+            isError ? s.reportProblemTitle : s.sendFeedbackTitle,
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
           leading: IconButton(
             tooltip: s.cancel,
             icon: const Icon(Icons.close),

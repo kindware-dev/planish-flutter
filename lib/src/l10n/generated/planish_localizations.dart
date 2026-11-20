@@ -562,7 +562,7 @@ abstract class PlanishLocalizations {
   /// No description provided for @quickSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'A problem, an idea, a question: tell us. A screenshot of this screen and recent logs are attached.'**
+  /// **'A screenshot of this screen and recent logs are attached.'**
   String get quickSubtitle;
 
   /// No description provided for @quickReportProblem.
@@ -582,6 +582,24 @@ abstract class PlanishLocalizations {
   /// In en, this message translates to:
   /// **'Ask a question'**
   String get quickAskQuestion;
+
+  /// No description provided for @quickProblemHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Something doesn\'t work as expected'**
+  String get quickProblemHint;
+
+  /// No description provided for @quickIdeaHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Something could work even better'**
+  String get quickIdeaHint;
+
+  /// No description provided for @quickQuestionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Something isn\'t clear'**
+  String get quickQuestionHint;
 
   /// No description provided for @drafts.
   ///

@@ -21,16 +21,19 @@ class QuickReportSheet extends StatefulWidget {
       QuickReportAction(
         icon: Icons.bug_report_outlined,
         label: s.quickReportProblem,
+        hint: s.quickProblemHint,
         category: FeedbackCategory.bug,
       ),
       QuickReportAction(
         icon: Icons.lightbulb_outline,
         label: s.quickShareIdea,
+        hint: s.quickIdeaHint,
         category: FeedbackCategory.idea,
       ),
       QuickReportAction(
         icon: Icons.help_outline,
         label: s.quickAskQuestion,
+        hint: s.quickQuestionHint,
         category: FeedbackCategory.question,
       ),
     ];
@@ -124,7 +127,9 @@ class _QuickReportSheetState extends State<QuickReportSheet> {
                           const SizedBox(height: 8),
                           Text(
                             quick.title?.call(context) ?? s.quickTitle,
-                            style: theme.textTheme.titleLarge,
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                           const SizedBox(height: 4),
                           Text(
@@ -134,28 +139,17 @@ class _QuickReportSheetState extends State<QuickReportSheet> {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          for (final action in actions)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8),
-                              child: FilledButton.tonalIcon(
-                                onPressed: () {
-                                  modal.close(null);
-                                  unawaited(
-                                    action.onTap?.call(context) ??
-                                        Planish.show(category: action.category),
-                                  );
-                                },
-                                icon: Icon(action.icon),
-                                label: Text(action.label),
-                                style: FilledButton.styleFrom(
-                                  alignment: AlignmentDirectional.centerStart,
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 16,
-                                  ),
-                                ),
-                              ),
-                            ),
+                          _ActionList(
+                            actions: actions,
+                            onPick: (action) {
+                              modal.close(null);
+                              unawaited(
+                                action.onTap?.call(context) ??
+                                    Planish.show(category: action.category),
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 8),
                           TextButton(
                             onPressed: () => modal.close(null),
                             child: Text(s.cancel),
@@ -170,6 +164,84 @@ class _QuickReportSheetState extends State<QuickReportSheet> {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// The actions as rows of one card: tinted icon, label, optional hint.
+class _ActionList extends StatelessWidget {
+  const _ActionList({required this.actions, required this.onPick});
+
+  final List<QuickReportAction> actions;
+  final ValueChanged<QuickReportAction> onPick;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+    return Material(
+      color: colors.surfaceContainerLowest,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: BorderSide(color: colors.outlineVariant),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          for (final (i, action) in actions.indexed) ...[
+            if (i > 0) Divider(height: 1, color: colors.outlineVariant),
+            InkWell(
+              onTap: () => onPick(action),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 64),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: colors.primaryContainer,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(action.icon, color: colors.primary),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              action.label,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            if (action.hint != null) ...[
+                              const SizedBox(height: 2),
+                              Text(
+                                action.hint!,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: colors.outline,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                      Icon(Icons.chevron_right, color: colors.outline),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
