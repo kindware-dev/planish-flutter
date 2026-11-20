@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart' show kDebugMode;
 // ignore: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -164,7 +165,9 @@ class PlanishHostState extends State<PlanishHost> {
       // Let any pending frame paint first; toImage() asserts otherwise.
       await SchedulerBinding.instance.endOfFrame;
       final render = _boundaryKey.currentContext?.findRenderObject();
-      if (render is! RenderRepaintBoundary || render.debugNeedsPaint) {
+      // debugNeedsPaint throws outside debug builds: no capture in release.
+      if (render is! RenderRepaintBoundary ||
+          (kDebugMode && render.debugNeedsPaint)) {
         return null;
       }
       final double ratio = math.min(
