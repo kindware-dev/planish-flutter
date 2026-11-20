@@ -13,3 +13,5 @@ example/pubspec.lock
 coverage/
 AUDIT.md
 .docs/
+
+.fvm/

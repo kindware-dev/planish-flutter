@@ -1,6 +1,6 @@
 name: planish
 description: "In-app feedback for Flutter: bugs, ideas and questions with an annotated screenshot, recent logs and device context, sent by email or to your own API."
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/kindware-dev/planish-flutter
 issue_tracker: https://github.com/kindware-dev/planish-flutter/issues
 

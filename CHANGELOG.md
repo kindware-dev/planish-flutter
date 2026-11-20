@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1
+
+- Works with `device_info_plus` 13; 12 is still accepted
+- Analyzes cleanly on Flutter 3.50 while still supporting Flutter 3.32
+- The details of a network call use the Planish theme, like the rest of the
+  debug tools
+
 ## 0.1.0
 
 First release.
