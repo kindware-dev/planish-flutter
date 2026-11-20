@@ -290,7 +290,8 @@ class PlanishLocalizationsEn extends PlanishLocalizations {
   String get notNow => 'Not now';
 
   @override
-  String get draftsNote => 'Kept on this device for 30 days.';
+  String get draftsNote =>
+      'Reports you started and did not send. Kept 30 days.';
 
   @override
   String get continueAction => 'Continue';
@@ -356,4 +357,39 @@ class PlanishLocalizationsEn extends PlanishLocalizations {
 
   @override
   String get keepQuiet => 'Keep quiet';
+
+  @override
+  String errorsCaught(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count errors caught',
+      one: '1 error caught',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get errorsCaughtHint => 'Report one if you saw it happen';
+
+  @override
+  String errorOnScreen(String screen) {
+    return 'Error on $screen';
+  }
+
+  @override
+  String get errorInApp => 'Error in the app';
+
+  @override
+  String get reportAction => 'Report';
+
+  @override
+  String get deleteAllDrafts => 'Delete all drafts';
+
+  @override
+  String get deleteAllDraftsConfirm =>
+      'Delete all drafts? They cannot be recovered.';
+
+  @override
+  String get noMessageYet => 'No message yet';
 }

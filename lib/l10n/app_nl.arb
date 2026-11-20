@@ -86,7 +86,7 @@
   "unsentDraft": "Niet-verzonden concept",
   "continueDraft": "Concept hervatten",
   "notNow": "Niet nu",
-  "draftsNote": "30 dagen op dit apparaat bewaard.",
+  "draftsNote": "Meldingen die je begon en niet verstuurde. 30 dagen bewaard.",
   "continueAction": "Hervatten",
   "deleteAction": "Verwijderen",
   "discardDraft": "Concept verwijderen",
@@ -104,5 +104,13 @@
   "quietTitle": "Voortaan stil houden?",
   "quietBody": "Na een fout wordt nog steeds een rapport voorbereid. Je vindt het onder Concepten in het formulier.",
   "keepShowing": "Blijven tonen",
-  "keepQuiet": "Stil houden"
+  "keepQuiet": "Stil houden",
+  "errorsCaught": "{count, plural, =1{1 fout opgevangen} other{{count} fouten opgevangen}}",
+  "errorsCaughtHint": "Meld er een als je het zag gebeuren",
+  "errorOnScreen": "Fout op {screen}",
+  "errorInApp": "Fout in de app",
+  "reportAction": "Melden",
+  "deleteAllDrafts": "Alle concepten verwijderen",
+  "deleteAllDraftsConfirm": "Alle concepten verwijderen? Ze kunnen niet worden hersteld.",
+  "noMessageYet": "Nog geen bericht"
 }

@@ -155,8 +155,12 @@ abstract final class Planish {
       PersistedLogs.open().ignore();
     }
     if (config.draftsEnabled) {
-      DraftStore.open().then((DraftStore? s) {
+      DraftStore.open().then((DraftStore? s) async {
         activeDraftStore = s;
+        if (s != null) {
+          s.currentBuild = await DeviceContext.buildId();
+          await s.list();
+        }
         if (s != null && config.remindDrafts) {
           WidgetsBinding.instance.addPostFrameCallback(
             (_) => Future<void>.delayed(
@@ -626,7 +630,9 @@ abstract final class Planish {
     if (host == null || store == null || host.hasOpenModal || _showing) {
       return;
     }
-    final drafts = await store.list();
+    final drafts = (await store.list())
+        .where((FeedbackDraft d) => !d.isCaughtError)
+        .toList();
     if (drafts.isEmpty) {
       return;
     }

@@ -291,7 +291,8 @@ class PlanishLocalizationsDe extends PlanishLocalizations {
   String get notNow => 'Nicht jetzt';
 
   @override
-  String get draftsNote => '30 Tage auf diesem Gerät gespeichert.';
+  String get draftsNote =>
+      'Begonnene, nicht gesendete Meldungen. 30 Tage gespeichert.';
 
   @override
   String get continueAction => 'Fortsetzen';
@@ -357,4 +358,39 @@ class PlanishLocalizationsDe extends PlanishLocalizations {
 
   @override
   String get keepQuiet => 'Still bleiben';
+
+  @override
+  String errorsCaught(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Fehler erkannt',
+      one: '1 Fehler erkannt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get errorsCaughtHint => 'Melden Sie einen, wenn Sie ihn bemerkt haben';
+
+  @override
+  String errorOnScreen(String screen) {
+    return 'Fehler auf $screen';
+  }
+
+  @override
+  String get errorInApp => 'Fehler in der App';
+
+  @override
+  String get reportAction => 'Melden';
+
+  @override
+  String get deleteAllDrafts => 'Alle Entwürfe löschen';
+
+  @override
+  String get deleteAllDraftsConfirm =>
+      'Alle Entwürfe löschen? Sie können nicht wiederhergestellt werden.';
+
+  @override
+  String get noMessageYet => 'Noch keine Nachricht';
 }

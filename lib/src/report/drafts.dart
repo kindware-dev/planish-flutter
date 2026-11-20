@@ -144,6 +144,17 @@ class FeedbackDraft {
   /// The screen the draft was started on, if known.
   String? get screen => frozen.context['screen'];
 
+  /// Made after an uncaught error and never opened by the user.
+  bool get isCaughtError => source == DraftSource.automatic && !touched;
+
+  /// The build the draft was made in, or null when unknown.
+  String? get build {
+    final version = frozen.context['app.version'];
+    return version == null
+        ? null
+        : '$version ${frozen.context['build.commit'] ?? ''}'.trim();
+  }
+
   FeedbackDraft copyWith({
     DateTime? updatedAt,
     bool? touched,
@@ -221,6 +232,10 @@ class DraftStore {
   final Directory _dir;
   final DateTime Function() _now;
 
+  /// This app's build, as [FeedbackDraft.build] gives it: caught errors from
+  /// another build are dropped.
+  String? currentBuild;
+
   File _json(String id) => File('${_dir.path}/$id.json');
   File _png(String id) => File('${_dir.path}/$id.png');
 
@@ -236,8 +251,13 @@ class DraftStore {
         final draft = FeedbackDraft.fromJson(
           (jsonDecode(await f.readAsString()) as Map).cast<String, Object?>(),
         );
-        if (draft.updatedAt.isBefore(limit)) {
-          await discard(draft.id);
+        final otherBuild =
+            draft.isCaughtError &&
+            currentBuild != null &&
+            draft.build != null &&
+            draft.build != currentBuild;
+        if (draft.updatedAt.isBefore(limit) || otherBuild) {
+          await _remove(draft.id);
         } else {
           drafts.add(draft);
         }
@@ -245,7 +265,9 @@ class DraftStore {
         await f.delete();
       }
     }
-    pendingDrafts.value = drafts.length;
+    pendingDrafts.value = drafts
+        .where((FeedbackDraft d) => !d.isCaughtError)
+        .length;
     return drafts..sort(
       (FeedbackDraft a, FeedbackDraft b) => b.updatedAt.compareTo(a.updatedAt),
     );
@@ -300,12 +322,13 @@ class DraftStore {
 
   /// Deletes a draft and its screenshot.
   Future<void> discard(String id) async {
+    await _remove(id);
+    await list();
+  }
+
+  Future<void> _remove(String id) async {
     await _deleteIfExists(_json(id));
     await _deleteIfExists(_png(id));
-    pendingDrafts.value = await _dir
-        .list()
-        .where((FileSystemEntity f) => f.path.endsWith('.json'))
-        .length;
   }
 
   static Future<void> _deleteIfExists(File f) async {

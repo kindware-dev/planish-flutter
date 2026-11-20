@@ -86,7 +86,7 @@
   "unsentDraft": "Borrador sin enviar",
   "continueDraft": "Continuar el borrador",
   "notNow": "Ahora no",
-  "draftsNote": "Guardados en este dispositivo durante 30 días.",
+  "draftsNote": "Informes que empezaste y no enviaste. Se guardan 30 días.",
   "continueAction": "Continuar",
   "deleteAction": "Eliminar",
   "discardDraft": "Descartar borrador",
@@ -104,5 +104,13 @@
   "quietTitle": "¿Mantenerlo discreto?",
   "quietBody": "Se seguirá preparando un informe tras cada error. Lo encontrarás en Borradores, en el formulario.",
   "keepShowing": "Seguir mostrando",
-  "keepQuiet": "Mantener discreto"
+  "keepQuiet": "Mantener discreto",
+  "errorsCaught": "{count, plural, =1{1 error detectado} other{{count} errores detectados}}",
+  "errorsCaughtHint": "Informa de uno si lo viste ocurrir",
+  "errorOnScreen": "Error en {screen}",
+  "errorInApp": "Error en la app",
+  "reportAction": "Informar",
+  "deleteAllDrafts": "Eliminar todos los borradores",
+  "deleteAllDraftsConfirm": "¿Eliminar todos los borradores? No se podrán recuperar.",
+  "noMessageYet": "Aún sin mensaje"
 }

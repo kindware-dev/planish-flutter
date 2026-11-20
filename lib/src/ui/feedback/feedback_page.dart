@@ -110,8 +110,9 @@ class _FeedbackPageState extends State<FeedbackPage> {
     }
     setState(() {
       _drafts = all.where((FeedbackDraft d) => d.id != _id).toList();
-      if (offer && _drafts.isNotEmpty) {
-        _offer = _drafts.first;
+      final own = _drafts.where((FeedbackDraft d) => !d.isCaughtError);
+      if (offer && own.isNotEmpty) {
+        _offer = own.first;
       }
     });
   }
@@ -205,6 +206,9 @@ class _FeedbackPageState extends State<FeedbackPage> {
     }
   }
 
+  int get _ownDrafts =>
+      _drafts.where((FeedbackDraft d) => !d.isCaughtError).length;
+
   Future<void> _showDrafts() async {
     final picked = await showModalBottomSheet<FeedbackDraft>(
       context: context,
@@ -222,6 +226,15 @@ class _FeedbackPageState extends State<FeedbackPage> {
                 setState(() => _offer = null);
               }
               return _drafts;
+            },
+            onDeleteAll: () async {
+              for (final d in _drafts) {
+                await activeDraftStore?.discard(d.id);
+              }
+              await _loadDrafts();
+              if (mounted) {
+                setState(() => _offer = null);
+              }
             },
           ),
         ),
@@ -372,7 +385,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                 padding: const EdgeInsets.only(right: 12),
                 child: ActionChip(
                   label: Text(s.drafts),
-                  avatar: _CountBadge(_drafts.length),
+                  avatar: _ownDrafts == 0 ? null : _CountBadge(_ownDrafts),
                   onPressed: _sending ? null : _showDrafts,
                 ),
               ),
@@ -891,7 +904,10 @@ class _DraftOffer extends StatelessWidget {
     final faint = theme.textTheme.bodySmall?.copyWith(
       color: colors.onSurfaceVariant,
     );
-    final where = [_ago(context, draft.updatedAt), ?draft.screen].join(' · ');
+    final where = [
+      _ago(context, draft.updatedAt),
+      ?_screenName(draft),
+    ].join(' · ');
     return Card.outlined(
       margin: EdgeInsets.zero,
       color: colors.surfaceContainerLowest,
@@ -934,17 +950,21 @@ class _DraftOffer extends StatelessWidget {
   }
 }
 
-/// The drafts kept on the device: continue one (pops it) or delete it.
+/// The drafts kept on the device. The user's own drafts are rows (screenshot,
+/// words, screen, date): a tap continues one. Errors caught without the user
+/// fold into one line, grouped; "Report" continues the newest of a group.
 class _DraftsSheet extends StatefulWidget {
   const _DraftsSheet({
     required this.drafts,
     required this.categories,
     required this.onDelete,
+    required this.onDeleteAll,
   });
 
   final List<FeedbackDraft> drafts;
   final List<FeedbackCategory> categories;
   final Future<List<FeedbackDraft>> Function(FeedbackDraft) onDelete;
+  final Future<void> Function() onDeleteAll;
 
   @override
   State<_DraftsSheet> createState() => _DraftsSheetState();
@@ -952,128 +972,384 @@ class _DraftsSheet extends StatefulWidget {
 
 class _DraftsSheetState extends State<_DraftsSheet> {
   late List<FeedbackDraft> _drafts = widget.drafts;
+  bool _errorsOpen = false;
+
+  Future<void> _delete(FeedbackDraft d) async {
+    final left = await widget.onDelete(d);
+    if (!mounted) {
+      return;
+    }
+    if (left.isEmpty) {
+      Navigator.of(context).pop();
+    } else {
+      setState(() => _drafts = left);
+    }
+  }
+
+  Future<void> _deleteAll() async {
+    final s = context.planishStrings;
+    final sure = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext c) => AlertDialog(
+        content: Text(s.deleteAllDraftsConfirm),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(c).pop(false),
+            child: Text(s.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(c).pop(true),
+            child: Text(s.deleteAction),
+          ),
+        ],
+      ),
+    );
+    if (sure != true || !mounted) {
+      return;
+    }
+    await widget.onDeleteAll();
+    if (mounted) {
+      Navigator.of(context).pop();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final s = context.planishStrings;
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
-    final faint = theme.textTheme.bodySmall?.copyWith(
-      color: colors.onSurfaceVariant,
+    final own = _drafts.where((FeedbackDraft d) => !d.isCaughtError).toList();
+    final groups = <String, List<FeedbackDraft>>{};
+    for (final d in _drafts.where((FeedbackDraft d) => d.isCaughtError)) {
+      groups.putIfAbsent(_errorKey(d), () => <FeedbackDraft>[]).add(d);
+    }
+    final caught = groups.values.fold<int>(0, (n, g) => n + g.length);
+    final card = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(18),
+      side: BorderSide(color: colors.outlineVariant),
     );
+    Widget divider() => Divider(height: 1, color: colors.outlineVariant);
+
     return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 4),
-            child: Text(s.drafts, style: theme.textTheme.titleMedium),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-            child: Text(s.draftsNote, style: faint),
-          ),
-          Flexible(
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                for (final d in _drafts)
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(color: colors.outlineVariant),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 12, 8),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Text(
+                s.drafts,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(4, 2, 4, 12),
+              child: Text(
+                s.draftsNote,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colors.outline,
+                ),
+              ),
+            ),
+            Flexible(
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  if (own.isNotEmpty)
+                    Material(
+                      color: colors.surfaceContainerLowest,
+                      shape: card,
+                      clipBehavior: Clip.antiAlias,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: [
-                              if (_label(context, d).isNotEmpty) ...[
-                                Text(
-                                  _label(context, d),
-                                  style: theme.textTheme.labelMedium?.copyWith(
-                                    color: d.source == DraftSource.automatic
-                                        ? colors.primary
-                                        : colors.error,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                              ],
-                              Expanded(
-                                child: Text(
-                                  _firstLine(d),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(_ago(context, d.updatedAt), style: faint),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  [
-                                    ?d.screen,
-                                    if (d.hasScreenshot) s.withScreenshot,
-                                    if (d.source == DraftSource.automatic)
-                                      s.afterAnError,
-                                  ].join(' · '),
-                                  style: faint,
-                                ),
-                              ),
-                              OutlinedButton(
-                                onPressed: () => Navigator.of(context).pop(d),
-                                child: Text(s.continueAction),
-                              ),
-                              TextButton(
-                                onPressed: () async {
-                                  final left = await widget.onDelete(d);
-                                  if (!context.mounted) {
-                                    return;
-                                  }
-                                  if (left.isEmpty) {
-                                    Navigator.of(context).pop();
-                                  } else {
-                                    setState(() => _drafts = left);
-                                  }
-                                },
-                                child: Text(s.deleteAction),
-                              ),
-                            ],
-                          ),
+                          for (final (i, d) in own.indexed) ...[
+                            if (i > 0) divider(),
+                            _OwnDraftRow(
+                              draft: d,
+                              categories: widget.categories,
+                              onOpen: () => Navigator.of(context).pop(d),
+                              onDelete: () => _delete(d),
+                            ),
+                          ],
                         ],
                       ),
                     ),
-                  ),
-              ],
+                  if (own.isNotEmpty && groups.isNotEmpty)
+                    const SizedBox(height: 12),
+                  if (groups.isNotEmpty)
+                    Material(
+                      color: colors.surfaceContainerLowest,
+                      shape: card,
+                      clipBehavior: Clip.antiAlias,
+                      child: Column(
+                        children: [
+                          InkWell(
+                            onTap: () =>
+                                setState(() => _errorsOpen = !_errorsOpen),
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                14,
+                                12,
+                                12,
+                                12,
+                              ),
+                              child: Row(
+                                children: [
+                                  _IconTile(
+                                    icon: Icons.error_outline,
+                                    color: colors.error,
+                                    background: colors.errorContainer,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: _TwoLines(
+                                      title: s.errorsCaught(caught),
+                                      subtitle: _errorsOpen
+                                          ? null
+                                          : s.errorsCaughtHint,
+                                    ),
+                                  ),
+                                  Icon(
+                                    _errorsOpen
+                                        ? Icons.expand_less
+                                        : Icons.expand_more,
+                                    color: colors.outline,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          if (_errorsOpen)
+                            for (final g in groups.values) ...[
+                              divider(),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                  14,
+                                  10,
+                                  12,
+                                  10,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: _TwoLines(
+                                        title: _screenName(g.first) == null
+                                            ? s.errorInApp
+                                            : s.errorOnScreen(
+                                                _screenName(g.first)!,
+                                              ),
+                                        subtitle: [
+                                          if (g.length > 1) '\u00d7${g.length}',
+                                          _ago(context, g.first.updatedAt),
+                                        ].join(' \u00b7 '),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    FilledButton.tonal(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(g.first),
+                                      style: FilledButton.styleFrom(
+                                        backgroundColor:
+                                            colors.primaryContainer,
+                                        foregroundColor: colors.primary,
+                                      ),
+                                      child: Text(s.reportAction),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                        ],
+                      ),
+                    ),
+                ],
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 4),
+            Center(
+              child: TextButton(
+                onPressed: _deleteAll,
+                style: TextButton.styleFrom(
+                  foregroundColor: colors.onSurfaceVariant,
+                ),
+                child: Text(s.deleteAllDrafts),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
+}
 
-  String _label(BuildContext context, FeedbackDraft d) {
-    if (d.source == DraftSource.automatic) {
-      return context.planishStrings.automaticDraft;
-    }
-    for (final c in widget.categories) {
-      if (c.id == d.categoryId) {
-        return c.displayLabel(context);
+/// One of the user's own drafts: screenshot, words, category, screen, date.
+class _OwnDraftRow extends StatelessWidget {
+  const _OwnDraftRow({
+    required this.draft,
+    required this.categories,
+    required this.onOpen,
+    required this.onDelete,
+  });
+
+  final FeedbackDraft draft;
+  final List<FeedbackCategory> categories;
+  final VoidCallback onOpen;
+  final VoidCallback onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = context.planishStrings;
+    final colors = Theme.of(context).colorScheme;
+    String? category;
+    for (final c in categories) {
+      if (c.id == draft.categoryId) {
+        category = c.displayLabel(context);
       }
     }
-    return d.categoryId ?? '';
+    final words = draft.message.trim();
+    return InkWell(
+      onTap: onOpen,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(14, 10, 4, 10),
+        child: Row(
+          children: [
+            _DraftThumb(draft: draft),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _TwoLines(
+                title: words.isEmpty ? s.noMessageYet : words,
+                titleLines: 2,
+                subtitle: [
+                  ?category,
+                  ?_screenName(draft),
+                  _ago(context, draft.updatedAt),
+                ].join(' \u00b7 '),
+              ),
+            ),
+            PopupMenuButton<void>(
+              icon: Icon(Icons.more_horiz, color: colors.outline),
+              itemBuilder: (BuildContext _) => [
+                PopupMenuItem<void>(
+                  onTap: onDelete,
+                  child: Text(s.deleteAction),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
+
+class _DraftThumb extends StatelessWidget {
+  const _DraftThumb({required this.draft});
+
+  final FeedbackDraft draft;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final frame = BoxDecoration(
+      color: colors.surfaceContainer,
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: colors.outlineVariant),
+    );
+    final store = activeDraftStore;
+    if (!draft.hasScreenshot || store == null) {
+      return Container(width: 42, height: 64, decoration: frame);
+    }
+    return FutureBuilder<Uint8List?>(
+      future: store.screenshot(draft.id),
+      builder: (BuildContext _, AsyncSnapshot<Uint8List?> shot) => Container(
+        width: 42,
+        height: 64,
+        decoration: frame,
+        clipBehavior: Clip.antiAlias,
+        child: shot.data == null
+            ? null
+            : Image.memory(
+                shot.data!,
+                fit: BoxFit.cover,
+                gaplessPlayback: true,
+              ),
+      ),
+    );
+  }
+}
+
+class _IconTile extends StatelessWidget {
+  const _IconTile({
+    required this.icon,
+    required this.color,
+    required this.background,
+  });
+
+  final IconData icon;
+  final Color color;
+  final Color background;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: 40,
+    height: 40,
+    decoration: BoxDecoration(
+      color: background,
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Icon(icon, color: color),
+  );
+}
+
+class _TwoLines extends StatelessWidget {
+  const _TwoLines({required this.title, this.subtitle, this.titleLines = 1});
+
+  final String title;
+  final String? subtitle;
+  final int titleLines;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          maxLines: titleLines,
+          overflow: TextOverflow.ellipsis,
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        if (subtitle != null && subtitle!.isNotEmpty) ...[
+          const SizedBox(height: 2),
+          Text(
+            subtitle!,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.outline,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+/// The route the draft was made on, or null for an unnamed root (`/`).
+String? _screenName(FeedbackDraft d) {
+  final screen = d.screen?.trim();
+  return screen == null || screen.isEmpty || screen == '/' ? null : screen;
+}
+
+String _errorKey(FeedbackDraft d) =>
+    '${_screenName(d)}\n${(d.frozen.error ?? '').split('\n').first}';
 
 String _firstLine(FeedbackDraft d) {
   final text = d.message.trim().isEmpty ? (d.frozen.error ?? '') : d.message;

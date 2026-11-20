@@ -86,7 +86,7 @@
   "unsentDraft": "Nicht gesendeter Entwurf",
   "continueDraft": "Entwurf fortsetzen",
   "notNow": "Nicht jetzt",
-  "draftsNote": "30 Tage auf diesem Gerät gespeichert.",
+  "draftsNote": "Begonnene, nicht gesendete Meldungen. 30 Tage gespeichert.",
   "continueAction": "Fortsetzen",
   "deleteAction": "Löschen",
   "discardDraft": "Entwurf verwerfen",
@@ -104,5 +104,13 @@
   "quietTitle": "Künftig still bleiben?",
   "quietBody": "Nach einem Fehler wird weiterhin ein Bericht vorbereitet. Sie finden ihn unter Entwürfe im Feedback-Formular.",
   "keepShowing": "Weiter anzeigen",
-  "keepQuiet": "Still bleiben"
+  "keepQuiet": "Still bleiben",
+  "errorsCaught": "{count, plural, =1{1 Fehler erkannt} other{{count} Fehler erkannt}}",
+  "errorsCaughtHint": "Melden Sie einen, wenn Sie ihn bemerkt haben",
+  "errorOnScreen": "Fehler auf {screen}",
+  "errorInApp": "Fehler in der App",
+  "reportAction": "Melden",
+  "deleteAllDrafts": "Alle Entwürfe löschen",
+  "deleteAllDraftsConfirm": "Alle Entwürfe löschen? Sie können nicht wiederhergestellt werden.",
+  "noMessageYet": "Noch keine Nachricht"
 }

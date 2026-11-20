@@ -100,7 +100,7 @@
   "unsentDraft": "Unsent draft",
   "continueDraft": "Continue the draft",
   "notNow": "Not now",
-  "draftsNote": "Kept on this device for 30 days.",
+  "draftsNote": "Reports you started and did not send. Kept 30 days.",
   "continueAction": "Continue",
   "deleteAction": "Delete",
   "discardDraft": "Discard draft",
@@ -111,7 +111,13 @@
   "errorCardTitle": "Something went wrong",
   "errorCardBody": "A report is ready with the screenshot and what the app was doing.",
   "draftsReminderTitle": "{count, plural, =1{1 report not sent} other{{count} reports not sent}}",
-  "@draftsReminderTitle": {"placeholders": {"count": {"type": "int"}}},
+  "@draftsReminderTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "draftsReminderBody": "They wait on this device until you send them.",
   "openDraft": "View",
   "later": "Later",
@@ -119,5 +125,27 @@
   "quietTitle": "Keep these quiet?",
   "quietBody": "Reports after an error will still be prepared. You will find them under Drafts in the feedback form.",
   "keepShowing": "Keep showing",
-  "keepQuiet": "Keep quiet"
+  "keepQuiet": "Keep quiet",
+  "errorsCaught": "{count, plural, =1{1 error caught} other{{count} errors caught}}",
+  "errorsCaughtHint": "Report one if you saw it happen",
+  "errorOnScreen": "Error on {screen}",
+  "errorInApp": "Error in the app",
+  "reportAction": "Report",
+  "deleteAllDrafts": "Delete all drafts",
+  "deleteAllDraftsConfirm": "Delete all drafts? They cannot be recovered.",
+  "noMessageYet": "No message yet",
+  "@errorsCaught": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@errorOnScreen": {
+    "placeholders": {
+      "screen": {
+        "type": "String"
+      }
+    }
+  }
 }

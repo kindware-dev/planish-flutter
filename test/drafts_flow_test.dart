@@ -123,4 +123,66 @@ void main() {
     await settleIo(tester);
     expect(await tester.runAsync(() => Planish.drafts.list()), isEmpty);
   });
+
+  testWidgets('the sheet lists own drafts and folds caught errors by screen', (
+    WidgetTester tester,
+  ) async {
+    final now = DateTime.now();
+    FeedbackDraft error(String id) => FeedbackDraft(
+      id: id,
+      createdAt: now,
+      updatedAt: now,
+      source: DraftSource.automatic,
+      touched: false,
+      frozen: const FrozenContext(
+        context: {'screen': '/settings'},
+        error: 'Bad state: boom',
+      ),
+    );
+    await tester.runAsync(() async {
+      final store = activeDraftStore!;
+      await store.save(error('e1'));
+      await store.save(error('e2'));
+      await store.save(
+        FeedbackDraft(
+          id: 'mine',
+          createdAt: now,
+          updatedAt: now,
+          frozen: const FrozenContext(context: {'screen': '/cart'}),
+          message: 'Total stays at 0',
+          categoryId: 'bug',
+        ),
+      );
+    });
+    await tester.pumpWidget(app());
+    await open(tester);
+    await settleIo(tester);
+
+    expect(find.text('Unsent draft'), findsOneWidget, reason: 'own draft only');
+    await tester.tap(find.text('Not now'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Drafts'));
+    await settleIo(tester);
+    expect(find.text('Total stays at 0'), findsOneWidget);
+    expect(find.textContaining('/cart'), findsOneWidget);
+    expect(find.text('2 errors caught'), findsOneWidget);
+    expect(find.text('Error on /settings'), findsNothing, reason: 'folded');
+
+    await tester.tap(find.text('2 errors caught'));
+    await tester.pumpAndSettle();
+    expect(find.text('Error on /settings'), findsOneWidget);
+    expect(find.textContaining('\u00d72'), findsOneWidget);
+
+    await tester.ensureVisible(find.text('Report'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Report'));
+    await settleIo(tester);
+    await settleIo(tester);
+    expect(
+      find.text('Report a problem'),
+      findsOneWidget,
+      reason: 'error opened',
+    );
+    expect(find.text('Discard draft', skipOffstage: false), findsOneWidget);
+  });
 }

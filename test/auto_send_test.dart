@@ -139,7 +139,7 @@ void main() {
     await crash(tester, 'boom');
     final draft = (await tester.runAsync(() => Planish.drafts.list()))!.single;
     expect(draft.relatedTo, sent.single.id);
-    expect(Planish.drafts.pending.value, 1);
+    expect(Planish.drafts.pending.value, 0, reason: 'a caught error');
   });
 
   testWidgets('a waiting draft is recalled once a day', (
@@ -148,6 +148,27 @@ void main() {
     await init(tester, prompts: PromptMode.quiet);
     await tester.pumpWidget(app());
     await crash(tester, 'boom');
+    expect(Planish.drafts.pending.value, 0);
+    await tester.runAsync(Planish.remindDraftsNow);
+    await tester.pump();
+    expect(
+      find.text('1 report not sent'),
+      findsNothing,
+      reason: 'a caught error alone is not recalled',
+    );
+
+    final now = DateTime.now();
+    await tester.runAsync(
+      () => activeDraftStore!.save(
+        FeedbackDraft(
+          id: 'mine',
+          createdAt: now,
+          updatedAt: now,
+          frozen: const FrozenContext(),
+          message: 'Total stays at 0',
+        ),
+      ),
+    );
     expect(Planish.drafts.pending.value, 1);
 
     await tester.runAsync(Planish.remindDraftsNow);

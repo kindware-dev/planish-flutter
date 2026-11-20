@@ -86,7 +86,7 @@
   "unsentDraft": "Brouillon non envoyé",
   "continueDraft": "Reprendre le brouillon",
   "notNow": "Pas maintenant",
-  "draftsNote": "Gardés sur cet appareil pendant 30 jours.",
+  "draftsNote": "Les retours commencés et pas envoyés. Gardés 30 jours.",
   "continueAction": "Reprendre",
   "deleteAction": "Supprimer",
   "discardDraft": "Supprimer le brouillon",
@@ -104,5 +104,13 @@
   "quietTitle": "Rester discret ?",
   "quietBody": "Un rapport sera toujours préparé après une erreur. Vous le retrouverez dans les brouillons du formulaire.",
   "keepShowing": "Continuer à afficher",
-  "keepQuiet": "Rester discret"
+  "keepQuiet": "Rester discret",
+  "errorsCaught": "{count, plural, =1{1 erreur détectée} other{{count} erreurs détectées}}",
+  "errorsCaughtHint": "Signalez-en une si vous l'avez vue se produire",
+  "errorOnScreen": "Erreur sur {screen}",
+  "errorInApp": "Erreur dans l'app",
+  "reportAction": "Signaler",
+  "deleteAllDrafts": "Supprimer tous les brouillons",
+  "deleteAllDraftsConfirm": "Supprimer tous les brouillons ? Ils ne pourront pas être récupérés.",
+  "noMessageYet": "Pas encore de message"
 }

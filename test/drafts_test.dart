@@ -166,4 +166,29 @@ void main() {
       isTrue,
     );
   });
+
+  test('caught errors from another build go; own drafts stay', () async {
+    const old = FrozenContext(context: {'app.version': '1.0.0+1'});
+    await store.save(
+      draft(
+        'error',
+        5,
+        source: DraftSource.automatic,
+        touched: false,
+        frozen: old,
+      ),
+    );
+    await store.save(draft('mine', 4, frozen: old));
+    await store.save(
+      draft('opened', 3, source: DraftSource.automatic, frozen: old),
+    );
+    expect(pendingDrafts.value, 2, reason: 'caught errors are not counted');
+
+    store.currentBuild = '1.0.0+1';
+    expect((await store.list()).map((d) => d.id), contains('error'));
+
+    store.currentBuild = '1.0.1+2';
+    final left = (await store.list()).map((d) => d.id).toSet();
+    expect(left, {'mine', 'opened'});
+  });
 }

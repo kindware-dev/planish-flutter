@@ -628,7 +628,7 @@ abstract class PlanishLocalizations {
   /// No description provided for @draftsNote.
   ///
   /// In en, this message translates to:
-  /// **'Kept on this device for 30 days.'**
+  /// **'Reports you started and did not send. Kept 30 days.'**
   String get draftsNote;
 
   /// No description provided for @continueAction.
@@ -738,6 +738,54 @@ abstract class PlanishLocalizations {
   /// In en, this message translates to:
   /// **'Keep quiet'**
   String get keepQuiet;
+
+  /// No description provided for @errorsCaught.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 error caught} other{{count} errors caught}}'**
+  String errorsCaught(int count);
+
+  /// No description provided for @errorsCaughtHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Report one if you saw it happen'**
+  String get errorsCaughtHint;
+
+  /// No description provided for @errorOnScreen.
+  ///
+  /// In en, this message translates to:
+  /// **'Error on {screen}'**
+  String errorOnScreen(String screen);
+
+  /// No description provided for @errorInApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Error in the app'**
+  String get errorInApp;
+
+  /// No description provided for @reportAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get reportAction;
+
+  /// No description provided for @deleteAllDrafts.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all drafts'**
+  String get deleteAllDrafts;
+
+  /// No description provided for @deleteAllDraftsConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all drafts? They cannot be recovered.'**
+  String get deleteAllDraftsConfirm;
+
+  /// No description provided for @noMessageYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No message yet'**
+  String get noMessageYet;
 }
 
 class _PlanishLocalizationsDelegate

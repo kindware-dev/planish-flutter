@@ -17,6 +17,18 @@ abstract final class DeviceContext {
   static Future<PackageInfo> _info() async =>
       _packageInfo ??= await PackageInfo.fromPlatform().timeout(_timeout);
 
+  /// This build as drafts record it (`app.version` and `build.commit`), or
+  /// null when the platform does not say.
+  static Future<String?> buildId() async {
+    try {
+      final p = await _info();
+      const commit = String.fromEnvironment('PLANISH_COMMIT');
+      return '${p.version}+${p.buildNumber} $commit'.trim();
+    } on Object {
+      return null;
+    }
+  }
+
   /// App name as declared on the platform, or null before the first collect.
   static Future<String?> appName() async {
     try {

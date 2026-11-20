@@ -86,7 +86,7 @@
   "unsentDraft": "Bozza non inviata",
   "continueDraft": "Riprendi la bozza",
   "notNow": "Non ora",
-  "draftsNote": "Conservate su questo dispositivo per 30 giorni.",
+  "draftsNote": "Segnalazioni iniziate e non inviate. Conservate 30 giorni.",
   "continueAction": "Riprendi",
   "deleteAction": "Elimina",
   "discardDraft": "Elimina bozza",
@@ -104,5 +104,13 @@
   "quietTitle": "Restare discreti?",
   "quietBody": "Dopo un errore verrà comunque preparato un report. Lo troverai tra le bozze del modulo.",
   "keepShowing": "Continua a mostrare",
-  "keepQuiet": "Resta discreto"
+  "keepQuiet": "Resta discreto",
+  "errorsCaught": "{count, plural, =1{1 errore rilevato} other{{count} errori rilevati}}",
+  "errorsCaughtHint": "Segnalane uno se l'hai visto accadere",
+  "errorOnScreen": "Errore su {screen}",
+  "errorInApp": "Errore nell'app",
+  "reportAction": "Segnala",
+  "deleteAllDrafts": "Elimina tutte le bozze",
+  "deleteAllDraftsConfirm": "Eliminare tutte le bozze? Non potranno essere recuperate.",
+  "noMessageYet": "Ancora nessun messaggio"
 }
