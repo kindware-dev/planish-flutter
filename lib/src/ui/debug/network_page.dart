@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:planish/src/l10n/l10n.dart';
 import 'package:planish/src/network/network_log.dart';
+import 'package:planish/src/ui/debug/debug_theme.dart';
 import 'package:planish/src/ui/debug/tool_page_scaffold.dart';
 
 /// Lists [NetworkLog.calls]; tapping one opens its details.
@@ -90,7 +91,9 @@ class _CallTile extends StatelessWidget {
       ),
       trailing: const Icon(Icons.chevron_right),
       onTap: () => Navigator.of(context).push<void>(
-        MaterialPageRoute<void>(builder: (_) => _CallDetailsPage(call)),
+        MaterialPageRoute<void>(
+          builder: (_) => DebugToolsTheme(child: _CallDetailsPage(call)),
+        ),
       ),
     );
   }
