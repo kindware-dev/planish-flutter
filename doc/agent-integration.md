@@ -53,17 +53,24 @@ Ask these unless the project already answers them. Do not guess.
 
 1. Where should reports go? `EmailFeedbackSender(to: [...])` (no backend,
    opens the mail client), `HttpFeedbackSender(url)` (multipart POST to their
-   API), or `CallbackFeedbackSender` to their own code. Never put a Slack,
+   API), `PlanishCloudSender('pl_…', server: 'https://planish.kindware.eu')`
+   (a Planish Cloud inbox; the ingest key comes from the app's settings
+   there), or `CallbackFeedbackSender` to their own code. Never put a Slack,
    Trello or Jira token in the app; those belong behind their backend.
-2. Should users be able to shake the phone to report, or only use a button?
+2. How should users open the form? A shake, an edge swipe
+   (`TriggerGesture.edgeSwipe`, from the right edge by default), a button in
+   the app, or several of them.
 3. Which categories, if any? `FeedbackCategory.defaults` is bug, idea,
-   question, other.
+   question, other. Without `categories`, the form offers none.
 4. May an optional reply e-mail field be shown (`askEmail`)?
 5. What may a report contain? Screenshot, logs, device facts are on by
    default and reviewable by the user. The app's own data (what the screen
    shows, what the logs mention, what `reportContext` returns) is the
    project's responsibility: ask what must never appear (health data, login
    screens, personal data) and who receives the reports.
+6. After an uncaught error, should the app offer a report (`prompts:
+   PromptMode.notify`: a small card offers it)? Only for internal or test
+   builds, never in store builds.
 
 ## Step 1: dependency
 
@@ -90,11 +97,15 @@ Future<void> main() async {
       categories: FeedbackCategory.defaults,
       reportGestures: {TriggerGesture.shake},                  // if the human said yes
       askEmail: true,                                          // if the human said yes
+      prompts: isInternalBuild ? PromptMode.notify : PromptMode.off, // question 6
     ),
   );
   runApp(const MyApp());
 }
 ```
+
+`isInternalBuild` stands for however the project tells test builds from store
+builds (a flavor, a `--dart-define`); use what exists.
 
 `init` installs `FlutterError.onError` and `PlatformDispatcher.onError`
 handlers and calls the previous ones afterwards. Leave existing crash
@@ -140,7 +151,11 @@ Keep the existing client, wrappers and interceptors. Add planish as one more
 layer.
 
 `package:http`: wrap the client where it is created, keeping any existing
-wrapper inside: `LoggingHttpClient(existingClient)`.
+wrapper inside: `LoggingHttpClient(existingClient)`. If the app calls the
+top-level functions (`http.get(...)`) and has no client, introduce one
+shared client (`final client = LoggingHttpClient(http.Client());`) where
+the calls are made, and route them through it; ask before touching shared
+code used by apps without planish.
 
 Dio: add an interceptor that calls `NetworkLog.record(NetworkCall(...))`; the
 guide `doc/integrations.md` has the full class. Pass the response headers,
@@ -210,6 +225,10 @@ flags:
 --dart-define=PLANISH_COMMIT=$(git rev-parse --short HEAD) --dart-define=PLANISH_ENV=prod
 ```
 
+They become `build.commit` and `build.env` in every report: the build line of
+the report, and the version and environment filters in Planish Cloud. Use the
+project's own names for environments (`dev`, `staging`, `prod`).
+
 Preserve the project's release flags. If `--obfuscate` is in use, make sure
 the `--split-debug-info` symbol files are retained per build so stack traces
 can be symbolised (`flutter symbolize`); say so in `analysisNotes`. Do not
@@ -221,6 +240,17 @@ Add an entry in the app's own style (a settings tile, a menu item, an app
 bar action) that calls `Planish.show()`. The translated label is available
 as `PlanishLocalizations.of(context).sendFeedback`. If the human chose a
 shake gesture, this entry is in addition, not instead.
+
+## Step 9b: platform setup
+
+No permission prompt is involved. Two native details:
+
+- iOS: add `NSMotionUsageDescription` to `Info.plist` (for example "Shake the
+  phone to report a problem."). The sensor plugin links the motion APIs, and
+  App Store review asks for the key even though the shake only reads the
+  accelerometer.
+- Android: nothing to add; the mail and sensor plugins declare what they
+  need.
 
 ## Step 10: checks
 

@@ -1,10 +1,23 @@
 # Changelog
 
-## Unreleased
+## 0.1.2
 
+- Release and profile builds attach the screenshot again
+- After an uncaught error on a still screen, the error card shows at once
+  instead of waiting for the next touch
+- The edge swipe fires from the very edge and on a short quick flick; it
+  starts within 40 px of the edge and needs 80 px of travel by default
+- Works with `package_info_plus` 8 and `device_info_plus` 10 and later
+- The drafts list shows only the user's own drafts, each with its
+  screenshot, words, screen and date; errors caught without the user fold
+  into one line, grouped by screen, and "Delete all drafts" clears the list
+- Errors caught and never opened are dropped when the app's version or build
+  changes; the "Drafts" count and the launch reminder leave them out
 - The "Share feedback" sheet lists its choices as rows, each with a short
   hint; `QuickReportAction.hint` adds one to your own entries
 - The feedback form's title is bold
+- The agent integration guide covers Planish Cloud, the error prompt, apps
+  without an HTTP client and the iOS motion key
 
 ## 0.1.1
 

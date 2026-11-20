@@ -1,6 +1,6 @@
 name: planish
 description: "In-app feedback for Flutter: bugs, ideas and questions with an annotated screenshot, recent logs and device context, sent by email or to your own API."
-version: 0.1.1
+version: 0.1.2
 repository: https://github.com/kindware-dev/planish-flutter
 issue_tracker: https://github.com/kindware-dev/planish-flutter/issues
 
@@ -29,7 +29,7 @@ environment:
   flutter: ">=3.32.0"
 
 dependencies:
-  device_info_plus: ">=12.1.0 <14.0.0"
+  device_info_plus: ">=10.0.0 <14.0.0"
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -37,7 +37,7 @@ dependencies:
   flutter_mailer: ^3.0.0
   http: ^1.5.0
   intl: ">=0.20.2 <0.21.0"
-  package_info_plus: ">=9.0.0 <11.0.0"
+  package_info_plus: ">=8.0.0 <11.0.0"
   path_provider: ^2.1.4
   sensors_plus: ^7.0.0
   shared_preferences: ^2.5.2
